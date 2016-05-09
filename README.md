@@ -3,7 +3,7 @@ A RESTful master-detail application built using Angular 2.
 
 ## Dependencies
 - You must have `node v >= 4.0` and `npm` installed (via `brew install node` or [NodeJS.org](https://nodejs.org/en/));
-- `npm i -g typings webpack-dev-server webpack rimraf`
+- `npm i -g typings webpack-dev-server webpack rimraf json-server`
 
 ### Getting Started
 
@@ -14,9 +14,9 @@ To get started run the commands below.
 ```bash
 $ git clone https://github.com/onehungrymind/fem-ng2-rest-app.git
 $ cd fem-ng2-rest-app
-$ npm install -g json-server
 $ npm install
+$ typings install
 $ npm start
 ```
 
-Then navigate to [http://localhost:3001](http://localhost:3001) in your browser.
+Then navigate to [http://localhost:3001](http://localhost:3001/#/items) in your browser.

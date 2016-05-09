@@ -1,5 +1,5 @@
-import {Component, Input, Output, EventEmitter, OnInit} from 'angular2/core';
-import {RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
+import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import {Routes, ROUTER_DIRECTIVES} from '@angular/router';
 import {Items} from './items/items.component';
 
 @Component({
@@ -7,11 +7,11 @@ import {Items} from './items/items.component';
   template: require('./app.html'),
   directives: [ROUTER_DIRECTIVES]
 })
-@RouteConfig([
-  {path: '/items', name: 'Items', component: Items, useAsDefault: true}
+@Routes([
+  {path: '/items', component: Items}
 ])
 export class App {
   links = {
-    items: ['Items']
+    items: ['/items']
   }
 }
