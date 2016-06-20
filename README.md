@@ -4,6 +4,7 @@ A RESTful master-detail application built using Angular 2.
 ## Dependencies
 - You must have `node v >= 4.0` and `npm` installed (via `brew install node` or [NodeJS.org](https://nodejs.org/en/));
 - `npm i -g typings webpack-dev-server webpack rimraf json-server`
+- If you have already installed `typings`, make sure to update it to `1.x`
 
 ### Getting Started
 
