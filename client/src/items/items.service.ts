@@ -2,7 +2,6 @@ import {Http, Headers} from '@angular/http';
 import {Injectable} from '@angular/core';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/delay';
 
 const BASE_URL = 'http://localhost:3000/items/';
 const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
@@ -20,7 +19,6 @@ export class ItemsService {
 
   loadItems() {
     return this.http.get(BASE_URL)
-      .delay(500)
       .map(res => res.json())
       .toPromise();
   }
