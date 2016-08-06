@@ -9,7 +9,8 @@
     "client:dev:hmr": "npm run client:dev -- --hot",
     "server": "json-server --watch server/api/db.json",
     "test": "karma start",
-    "start": "concurrent \"npm run server\" \"npm run client\""
+    "start": "concurrent \"npm run server\" \"npm run client\"",
+    "build": "rm -rf index.html bundle.js bundle.js.map assets/; webpack --output-path ./; cp -a client/public/. ./"
   },
   "dependencies": {
     "@angular/common": "2.0.0-rc.2",
