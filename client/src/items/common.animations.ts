@@ -7,13 +7,14 @@ const baseStyleConfig = style({
 });
 
 const entry = trigger('entry', [
-  state('in', baseStyleConfig),
-  transition('void <=> left', [
-    style({opacity: 0, transform: 'translateX(-50rem)' }),
+  state('left', baseStyleConfig),
+  state('right', baseStyleConfig),
+  transition('void => left', [
+    style({opacity: 0, transform: 'translateX(-100%)' }),
     animate('500ms ease-in-out')
   ]),
-  transition('void <=> right', [
-    style({opacity: 0, transform: 'translateX(50rem)' }),
+  transition('void => right', [
+    style({opacity: 0, transform: 'translateX(100%)' }),
     animate('500ms ease-in-out')
   ])
 ]);
