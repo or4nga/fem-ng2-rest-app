@@ -1,10 +1,11 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter, trigger, state, style, transition, animate} from '@angular/core';
 import {Item} from './items.service';
+import {entry} from './common.animations';
 
 @Component({
   selector: 'item-detail',
   template: `
-  <div class="item-card mdl-card mdl-shadow--2dp">
+  <div class="item-card mdl-card mdl-shadow--2dp" @entry="'right'">
     <div class="mdl-card__title">
       <h2 class="mdl-card__title-text" *ngIf="selectedItem.id">Editing {{originalName}}</h2>
       <h2 class="mdl-card__title-text" *ngIf="!selectedItem.id">Create New Item</h2>
@@ -33,7 +34,8 @@ import {Item} from './items.service';
           class="mdl-button mdl-js-button mdl-button--colored mdl-js-ripple-effect">Save</button>
     </div>
   </div>
-  `
+  `,
+  animations: [entry]
 })
 export class ItemDetail {
   originalName: string;

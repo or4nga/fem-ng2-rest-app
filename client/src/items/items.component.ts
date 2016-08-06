@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit, trigger, state, style, transition, animate} from '@angular/core';
 import {ItemsService, Item} from './items.service';
 import {ItemsList} from './items-list.component';
 import {ItemDetail} from './item-detail.component';
@@ -8,7 +8,7 @@ import {ItemDetail} from './item-detail.component';
   template: `
   <div class="mdl-grid items">
     <div class="mdl-cell mdl-cell--6-col">
-      <items-list [items]="items"
+      <items-list [items]="items" [selectedItem]="selectedItem"
       (selected)="selectItem($event)" (deleted)="deleteItem($event)">
       </items-list>
     </div>
