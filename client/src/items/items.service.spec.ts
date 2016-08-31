@@ -1,42 +1,44 @@
-import {
-  it,
-  describe,
-  expect,
-  inject,
-  beforeEachProviders,
-  beforeEach} from '@angular/core/testing';
-import { provide } from '@angular/core';
-import { HTTP_PROVIDERS, Http, XHRBackend, Response, ResponseOptions } from '@angular/http';
-import { ItemsService } from './items.service';
+import {ItemsService} from './items.service';
+import {Injector, ReflectiveInjector} from '@angular/core';
+import {BaseRequestOptions, ConnectionBackend, Http, Response, ResponseOptions} from '@angular/http';
 import {MockBackend, MockConnection} from '@angular/http/testing';
 
 describe('ItemsService', () => {
-  let service, backend, http, setConnection;
+  let http: Http,
+    injector: Injector,
+    backend: MockBackend,
+    service: ItemsService,
+    setConnection: Function;
 
-  beforeEachProviders(() => [
-    ItemsService, HTTP_PROVIDERS, provide(XHRBackend, {useClass: MockBackend})
-  ]);
+  beforeEach(() => {
+    injector = ReflectiveInjector.resolveAndCreate([
+      ItemsService, BaseRequestOptions, MockBackend, {
+        provide: Http,
+        useFactory: function(backend: ConnectionBackend, defaultOptions: BaseRequestOptions) {
+          return new Http(backend, defaultOptions);
+        },
+        deps: [MockBackend, BaseRequestOptions]
+      }
+    ]);
 
-  beforeEach(inject([ItemsService, XHRBackend, Http], (ItemsService, mockBackend, Http) => {
-    service = ItemsService;
-    backend = mockBackend;
-    http = Http;
+    http = injector.get(Http);
+    backend = injector.get(MockBackend);
+    service = injector.get(ItemsService);
 
     setConnection = (options): void => {
-      let responseOptions = { body: options};
+      const responseOptions = { body: options},
+        baseResponse = new Response(new ResponseOptions(responseOptions));
 
       backend.connections.subscribe((connection: MockConnection) => {
-        connection.mockRespond(
-          new Response(
-            new ResponseOptions(responseOptions)
-          )
-        );
+        connection.mockRespond(baseResponse);
       });
     };
-  }));
+  });
+
+  afterEach(() => backend.verifyNoPendingRequests());
 
   it('#loadItems', () => {
-    let requestBody = {id: 1, name: 'First Item'};
+    const requestBody = {id: 1, name: 'First Item'};
 
     setConnection(requestBody);
     spyOn(http, 'get').and.callThrough();
@@ -49,11 +51,11 @@ describe('ItemsService', () => {
   });
 
   it('#saveItem', () => {
-    let newItem = { id: undefined, name: 'New Item', description: 'Description' },
+    const newItem = { id: undefined, name: 'New Item', description: 'Description' },
         existingItem = { id: 1, name: 'Existing Item', description: 'Description' };
 
-    spyOn(service, 'createItem').and.callThrough();
-    spyOn(service, 'updateItem');
+    const createItem = spyOn(service, 'createItem').and.callThrough();
+    const updateItem = spyOn(service, 'updateItem');
 
     service.saveItem(newItem);
 
@@ -62,45 +64,45 @@ describe('ItemsService', () => {
 
     service.saveItem(existingItem);
 
-    expect(service.createItem.calls.count()).toEqual(1);
-    expect(service.updateItem).toHaveBeenCalled();
+    expect(createItem.calls.count()).toEqual(1);
+    expect(updateItem).toHaveBeenCalled();
   });
 
   it('#createItem', () => {
-    let requestBody = { id: 1, name: 'First Item', description: 'Described' };
+    const requestBody = { id: 1, name: 'First Item', description: 'Described' };
 
     setConnection(requestBody);
-    spyOn(http, 'post').and.callThrough();
+    const post = spyOn(http, 'post').and.callThrough();
 
     service.createItem(requestBody)
       .then((res) => {
-        expect(http.post.calls.argsFor(0).length).toBe(3);
+        expect(post.calls.argsFor(0).length).toBe(3);
         expect(res).toEqual(requestBody);
       });
   });
 
   it('#updateItem', () => {
-    let requestBody = { id: 1, name: 'First Item Updated', description: 'Described' };
+    const requestBody = { id: 1, name: 'First Item Updated', description: 'Described' };
 
     setConnection(requestBody);
-    spyOn(http, 'put').and.callThrough();
+    const put = spyOn(http, 'put').and.callThrough();
 
     service.updateItem(requestBody)
       .then((res) => {
-        expect(http.put.calls.argsFor(0).length).toBe(3);
+        expect(put.calls.argsFor(0).length).toBe(3);
         expect(res).toEqual(requestBody);
       });
   });
 
   it('#deleteItem', () => {
     setConnection(undefined);
-    spyOn(http, 'delete').and.callThrough();
+    const del = spyOn(http, 'delete').and.callThrough();
 
-    let deletedItem = { id: 1, name: 'First Item Updated', description: 'Described' };
+    const deletedItem = { id: 1, name: 'First Item Updated', description: 'Described' };
     service.deleteItem(deletedItem)
       .then((res) => {
-        expect(http.delete.calls.argsFor(0).length).toBe(1);
-        expect(res).toBeUndefined();
+        expect(del.calls.argsFor(0).length).toBe(1);
+        expect(res.body).toBeUndefined();
       });
   });
 });
