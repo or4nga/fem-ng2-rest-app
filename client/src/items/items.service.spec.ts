@@ -95,14 +95,15 @@ describe('ItemsService', () => {
   });
 
   it('#deleteItem', () => {
-    setConnection(undefined);
+    const requestBody = { id: 1, name: 'First Item Deleted', description: 'Described' };
+
+    setConnection(requestBody);
     const del = spyOn(http, 'delete').and.callThrough();
 
-    const deletedItem = { id: 1, name: 'First Item Updated', description: 'Described' };
-    service.deleteItem(deletedItem)
+    service.deleteItem(requestBody)
       .then((res) => {
         expect(del.calls.argsFor(0).length).toBe(1);
-        expect(res.body).toBeUndefined();
+        expect(res).toEqual(requestBody);
       });
   });
 });
