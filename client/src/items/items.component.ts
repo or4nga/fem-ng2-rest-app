@@ -2,6 +2,8 @@ import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import {ItemsService, Item} from './items.service';
 import {ItemsList} from './items-list.component';
 import {ItemDetail} from './item-detail.component';
+import {Widgets} from '../widgets/widgets';
+import {Router} from '@angular/router'
 
 @Component({
   selector: 'items',
@@ -27,19 +29,27 @@ import {ItemDetail} from './item-detail.component';
     }
   `],
   providers: [ItemsService],
-  directives: [ItemsList, ItemDetail]
+  directives: [ItemsList, ItemDetail, Widgets]
 })
 export class Items implements OnInit {
   items: Array<Item>;
   selectedItem: Item;
 
-  constructor(private itemsService: ItemsService) {}
+  constructor(private itemsService: ItemsService, private _router: Router) {}
 
   ngOnInit() {
     this.itemsService.loadItems()
       .then(items => {
         this.items = items;
       });
+  }
+
+  // goToWidgets(id: number=1) {
+  //   this._router.navigate(['widgets', {id: id}])
+  // }
+
+  goToWidgets() {
+    this._router.navigate(['widgets'])
   }
 
   resetItem() {
